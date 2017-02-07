@@ -13,21 +13,22 @@ GroundFilter::~GroundFilter()
 
 const cv::Mat &GroundFilter::processFrame(const cv::Mat &frame){
     frame_ = frame;
-    indexFunction_(frame_, indexImage);
-
-    bool flag = false;
-    for (int i=0; i < indexImage.rows; ++i){
-        const float *inputRow = indexImage.ptr<float>(i);
-        for (int j=0; j < indexImage.cols; ++j){
-            if (inputRow[j] >= indexUpperLimit)
+    indexImage.create(frame_.size(), CV_32F);
+    bool flag;
+    for (int i=0; i < frame_.rows; ++i){
+        const cv::Point3_<uchar>* input = frame_.ptr<cv::Point3_<uchar> >(i);
+        float *output = indexImage.ptr<float>(i);
+        for (int j=0; j < frame_.cols; ++j, ++input, ++output){
+            *output = indexFunction_(*input);
+            if (*output >= indexUpperLimit)
                 continue;
             if (!flag){
-                minValue = maxValue = inputRow[j];
+                minValue = maxValue = *output;
                 flag = true;
             }
             else{
-                minValue = std::min(minValue, inputRow[j]);
-                maxValue = std::max(maxValue, inputRow[j]);
+                minValue = std::min(minValue, *output);
+                maxValue = std::max(maxValue, *output);
             }
         }
     }

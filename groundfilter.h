@@ -11,7 +11,7 @@ namespace cwd{
 class GroundFilter
 {
     public:
-        GroundFilter(std::function<void (const cv::Mat &, cv::Mat &)> indexFunction, bool highGround = false, float upperLimit = 150.f) :
+        GroundFilter(std::function<float (const cv::Point3_<uchar> &)> indexFunction, bool highGround = false, float upperLimit = 150.f) :
             indexFunction_(indexFunction), highGround_(highGround), indexUpperLimit(upperLimit) {}
         virtual ~GroundFilter();
 
@@ -23,7 +23,7 @@ class GroundFilter
         void calculateHistogram(cv::Mat &histogram);
     protected:
     private:
-        std::function <void (const cv::Mat &, cv::Mat &)> indexFunction_;
+        std::function<float (const cv::Point3_<uchar> &)> indexFunction_;
         bool highGround_;
         float indexUpperLimit;
         cv::Mat frame_;
@@ -31,6 +31,8 @@ class GroundFilter
         cv::Mat binarizationResult;
         cv::Mat removalResult;
         float minValue, maxValue;
+
+        void calculateIndexImage();
 
 };
 

@@ -5,15 +5,12 @@
 
 namespace cwd{
 
-void computeExcessGreen(const cv::Mat &input, cv::Mat &output);
-void computeModifiedExcessGreen(const cv::Mat &input, cv::Mat &output);
-void computeNormalizedModifiedExcessGreen(const cv::Mat &input, cv::Mat &output);
-void computeExcessRed(const cv::Mat &input, cv::Mat &output);
-void computeNormalizedExcessRed(const cv::Mat &input, cv::Mat &output);
-void computeCIVE(const cv::Mat &input, cv::Mat &output);
-void computeNormalizedCIVE(const cv::Mat &input, cv::Mat &output);
-void computeVEG(const cv::Mat &input, cv::Mat &output);
-void computeCombination(const cv::Mat &input, cv::Mat &output);
+float computeExcessGreen(const cv::Point3_<uchar> &rgb, bool normalize = false);
+float computeModifiedExcessGreen(const cv::Point3_<uchar> &rgb, bool normalize = false);
+float computeExcessRed(const cv::Point3_<uchar> &rgb, bool normalize = false);
+float computeCIVE(const cv::Point3_<uchar> &rgb, bool normalize = false);
+float computeVEG(const cv::Point3_<uchar> &rgb, bool normalize = false);
+float computeCombination(const cv::Point3_<uchar> &rgb);
 
 }
 
