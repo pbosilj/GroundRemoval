@@ -1,7 +1,9 @@
 #include "groundfilter.h"
 
-#include <iostream>
-#include <algorithm>
+#include <iostream>                         // for std::cout
+#include <algorithm>                        // for std::sqrt
+
+#include <opencv2/imgproc/imgproc.hpp>      // for cv::calcHist, cv::normalize, cv::threshold
 
 namespace cwd{
 
@@ -52,7 +54,7 @@ const cv::Mat &GroundFilter::processFrame(const cv::Mat &frame){
     return removalResult;
 }
 
-void GroundFilter::calculateHistogram(cv::Mat &histogram){
+void GroundFilter::calculateHistogram(cv::Mat &histogram) const{
     int histSize = 256;
     //float range[] = {9.048, 9.052};
     float range[] = {minValue, maxValue};
@@ -68,6 +70,26 @@ void GroundFilter::calculateHistogram(cv::Mat &histogram){
         cv::line (histogram, cv::Point (bin_w * (i-1), hist_h - cvRound(hist.at<float>(i-1)) ),
                              cv::Point (bin_w * (i)  , hist_h - cvRound(hist.at<float>(i))   ),
                              cv::Scalar(255), 2, 8, 0);
+    }
+}
+
+void GroundFilter::process3dFrame(pcl::PointCloud<pcl::PointXYZRGBA> &cloud){
+    int counter = 0;
+    int dcounter = 0;
+    for (int i=0, szi = cloud.points.size(); i < szi; ++i){
+
+        cv::Point3_<uchar> rgb (cloud.points[i].r, cloud.points[i].g, cloud.points[i].b);
+        float value = indexFunction_(rgb);
+        cloud.points[i].a = value;
+        #define SQ(x) ((x)*(x))
+        if (rgb.x == 0 && rgb.y == 0 && rgb.z == 0)
+            continue;
+        if (std::isnan(std::sqrt(SQ(cloud.points[i].x)+SQ(cloud.points[i].y)+SQ(cloud.points[i].z))))
+            continue;
+
+        #define SQ(x) ((x)*(x))
+            std::cout << value << "\t" << std::sqrt(SQ(cloud.points[i].x)+SQ(cloud.points[i].y)+SQ(cloud.points[i].z)) << std::endl;
+        #undef SQ
     }
 }
 

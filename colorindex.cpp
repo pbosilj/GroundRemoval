@@ -1,7 +1,5 @@
 #include "colorindex.h"
 
-#include <iostream>
-
 namespace cwd{
 
 void normalizeColorCoords(float &r, float &g, float &b){

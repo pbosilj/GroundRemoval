@@ -1,7 +1,7 @@
 #ifndef COLORINDEX_H
 #define COLORINDEX_H
 
-#include <opencv2/core/core.hpp>
+#include <opencv2/core/core.hpp>    // for cv::Point3_
 
 namespace cwd{
 

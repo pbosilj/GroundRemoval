@@ -3,8 +3,10 @@
 
 #include <functional>
 
-#include <opencv2/core/core.hpp>
-#include <opencv2/imgproc/imgproc.hpp>
+#include <opencv2/core/core.hpp>    // for pcl::Point3_
+
+#include <pcl/point_cloud.h>        // for pcl::PointCloud
+#include <pcl/point_types.h>        // for pcl::PointXYZRGBA
 
 namespace cwd{
 
@@ -17,13 +19,20 @@ class GroundFilter
 
         const cv::Mat &processFrame(const cv::Mat &frame);
 
-        const cv::Mat &getIndexImage() { return indexImage; }
-        const cv::Mat &getBinarizationResult() { return binarizationResult; }
+        const cv::Mat &getIndexImage() const { return indexImage; }
+        const cv::Mat &getBinarizationResult() const { return binarizationResult; }
 
-        void calculateHistogram(cv::Mat &histogram);
+        void calculateHistogram(cv::Mat &histogram) const;
+
+        void process3dFrame(pcl::PointCloud<pcl::PointXYZRGBA> &cloud);
+
     protected:
     private:
+
         std::function<float (const cv::Point3_<uchar> &)> indexFunction_;
+
+        /* to process 2D rgb image */
+
         bool highGround_;
         float indexUpperLimit;
         cv::Mat frame_;
@@ -34,6 +43,9 @@ class GroundFilter
 
         void calculateIndexImage();
 
+        /* to process 3D point cloud */
+
+        pcl::PointCloud<pcl::PointXYZRGBA> frame3d_;
 };
 
 }

@@ -7,6 +7,22 @@
 #include "colorindex.h"
 #include "groundfilter.h"
 
+#include "tools.h"
+
+//#include <pcl/io/pcd_io.h>
+//#include <pcl/io/lzf_image_io.h>
+//#include <pcl/common/projection_matrix.h>
+//#include <pcl/console/print.h>
+//#include <pcl/console/parse.h>
+//#include <pcl/console/time.h>
+
+//using namespace pcl;
+//using namespace pcl::io;
+//using namespace pcl::console;
+
+
+
+
 int main(int argc, char *argv[])
 {
     std::string names[4] = { "/home/petra/Programming/PCLGrabber/build/data/20160915T125738_copy/orig/frame_20160915T125803.510514_orig.png_",
@@ -44,8 +60,15 @@ int main(int argc, char *argv[])
     }
 
     cv::destroyWindow("Display");
+    pcl::PointCloud<pcl::PointXYZRGBA> cloud;
+    cwd::loadPCLZF(std::string(argv[1]), std::string(argv[2]), std::string(argv[3]), cloud);
+    CIVEFilter.process3dFrame(cloud);
+
     return 0;
 }
+
+
+
 
 
 
