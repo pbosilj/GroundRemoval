@@ -8,12 +8,17 @@
 #include <pcl/point_cloud.h>        // for pcl::PointCloud
 #include <pcl/point_types.h>        // for pcl::PointXYZRGBA
 
+#include <iostream>
+#include <fstream>
+
 namespace cwd{
+
+typedef std::function<float (const cv::Point3_<uchar> &)> rgbIndex;
 
 class GroundFilter
 {
     public:
-        GroundFilter(std::function<float (const cv::Point3_<uchar> &)> indexFunction, bool highGround = false, float upperLimit = 150.f) :
+        GroundFilter(rgbIndex indexFunction, bool highGround = false, float upperLimit = 150.f) :
             indexFunction_(indexFunction), highGround_(highGround), indexUpperLimit(upperLimit) {}
         virtual ~GroundFilter();
 
@@ -24,12 +29,15 @@ class GroundFilter
 
         void calculateHistogram(cv::Mat &histogram) const;
 
-        void process3dFrame(pcl::PointCloud<pcl::PointXYZRGBA> &cloud);
+        void process3dFrame(pcl::PointCloud<pcl::PointXYZRGBA> &cloud, std::ostream &out = std::cout);
 
+        void addSecondaryFunction(rgbIndex indexFunction) {secondaryIndex.push_back(indexFunction); }
     protected:
     private:
 
-        std::function<float (const cv::Point3_<uchar> &)> indexFunction_;
+        rgbIndex indexFunction_;
+
+        std::vector <rgbIndex> secondaryIndex;
 
         /* to process 2D rgb image */
 

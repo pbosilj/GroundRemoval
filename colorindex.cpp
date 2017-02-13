@@ -15,6 +15,13 @@ float computeExcessGreen(const cv::Point3_<uchar> &rgb, bool normalize){
     return 2*_g - _b - _r;
 }
 
+float computeModifiedExcessGreen(const cv::Point3_<uchar> &rgb, bool normalize){
+    float _r = rgb.x, _g = rgb.y, _b = rgb.z;
+    if (normalize) normalizeColorCoords(_r, _g, _b);
+    return 1.262*_g - 0.311*_b - 0.884*_r;
+}
+
+
 float computeExcessRed(const cv::Point3_<uchar> &rgb, bool normalize){
     float _r = rgb.x, _g = rgb.y, _b = rgb.z;
     if (normalize) normalizeColorCoords(_r, _g, _b);

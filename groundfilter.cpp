@@ -73,7 +73,7 @@ void GroundFilter::calculateHistogram(cv::Mat &histogram) const{
     }
 }
 
-void GroundFilter::process3dFrame(pcl::PointCloud<pcl::PointXYZRGBA> &cloud){
+void GroundFilter::process3dFrame(pcl::PointCloud<pcl::PointXYZRGBA> &cloud, std::ostream &out){
     int counter = 0;
     int dcounter = 0;
     for (int i=0, szi = cloud.points.size(); i < szi; ++i){
@@ -86,9 +86,15 @@ void GroundFilter::process3dFrame(pcl::PointCloud<pcl::PointXYZRGBA> &cloud){
             continue;
         if (std::isnan(std::sqrt(SQ(cloud.points[i].x)+SQ(cloud.points[i].y)+SQ(cloud.points[i].z))))
             continue;
+        if (std::isnan(cloud.points[i].z))
+            continue;
+        //if (std::sqrt(SQ(cloud.points[i].x)+SQ(cloud.points[i].y)+SQ(cloud.points[i].z)) > 1.3)
+        //    continue;
 
-        #define SQ(x) ((x)*(x))
-            std::cout << value << "\t" << std::sqrt(SQ(cloud.points[i].x)+SQ(cloud.points[i].y)+SQ(cloud.points[i].z)) << std::endl;
+            out << value << ",";
+            for (int j=0; j < secondaryIndex.size(); ++j)
+                out << secondaryIndex[j](rgb) << ",";
+            out << cloud.points[i].z << "," << (std::sqrt(SQ(cloud.points[i].x)+SQ(cloud.points[i].y)+SQ(cloud.points[i].z))) << std::endl;
         #undef SQ
     }
 }
